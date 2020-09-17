@@ -1,10 +1,10 @@
 const { Router } = require("express");
 const router = new Router();
-const { findAll, findById, createBlog } = require('../controllers/blog.controller')
+const { findAll, findById, createBlog, updateBlog } = require('../controllers/blog.controller')
 
 
 
-router.get("/:id", findById);
+router.get("/:id", findById).patch("/:id", updateBlog);
 router
     .get("/", findAll)
     .post("/", createBlog);

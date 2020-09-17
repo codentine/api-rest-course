@@ -1,5 +1,6 @@
 const url = require("url");
-const { findAll, findById, createBlog } = require("../services/blog.services");
+const { findAll, findById, createBlog, updateBlog } = require("../services/blog.services");
+const { prepareResponse } = require("../lib/utils");
 
 // Query String: ?filter=<valor> -- url.parse(req.url, true).query;
 // Param: /:param -- req.params
@@ -30,7 +31,7 @@ exports.findById = async (req, res, next) => {
   }
 };
 
-exports.createBlog = async (req, res) => {
+exports.createBlog = async (req, res, next) => {
   try {
     const { body } = req;
     const newBlog = await createBlog(body)
@@ -41,3 +42,14 @@ exports.createBlog = async (req, res) => {
   }
   
 };
+
+exports.updateBlog = async(req, res, next) => {
+  try {
+    const { body, params: { id } } = req;
+    const blogUpdated = await updateBlog(id, body);
+    const response = prepareResponse(blogUpdated, 'blogUpdated');
+    res.status(200).json(response).end()
+  } catch(error){
+    next(error)
+  }
+}

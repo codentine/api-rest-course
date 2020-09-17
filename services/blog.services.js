@@ -1,5 +1,5 @@
 const BlogModel = require("../models/blog.model")
-
+const { prepareModelForUpdate } = require("../lib/utils")
 exports.findAll = async (username) => {
     try {
         return await BlogModel.find({ username }).populate('posts').exec();
@@ -34,5 +34,15 @@ exports.addPost = async (blogId, post) => {
         await blog.save()
     } catch(error) {
         throw error
+    }
+}
+
+exports.updateBlog = async (blogId, blogInfo) => {
+    try {
+        const blog = await BlogModel.findById(blogId).exec()
+        const blogPrepared = prepareModelForUpdate(blogInfo, blog);
+        return await blogPrepared.save() 
+    } catch(error) {
+        throw  error
     }
 }
